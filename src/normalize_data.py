@@ -15,8 +15,9 @@ class NormalizeData:
                 category = "card"
             else:
                 category = "uncategorized"
-            transactions_in_file = re.findall(self.regular_expressions[category], file_text, flags=re.MULTILINE)
-            for transaction in transactions_in_file:
-                transactions.append({"transaction": transaction, "category": category})
+            if category != "uncategorized":
+                transactions_in_file = re.findall(self.regular_expressions[category], file_text, flags=re.MULTILINE)
+                for transaction in transactions_in_file:
+                    transactions.append({"transaction": transaction, "category": category})
 
         return transactions
