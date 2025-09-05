@@ -2,3 +2,5 @@
 statements/
 __pycache__/
 .vscode
+.pytest_cache/
+.DS_Store
