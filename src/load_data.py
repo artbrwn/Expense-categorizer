@@ -23,10 +23,10 @@ class LoadData:
                     text += pdf_text
         return text
     
-    def extract_all_texts(self) -> dict:
-        all_texts = {}
+    def extract_all_texts(self) -> list:
+        all_texts = []
         for file in self.list_pdfs():
             file_path = os.path.join(self.folder_path, file)
-            all_texts[file] = self.extract_text_from_pdf(file_path)
+            all_texts.append(self.extract_text_from_pdf(file_path))
         
         return all_texts
