@@ -36,3 +36,14 @@ class NormalizeData:
                                "balance": float(match.group("balance").replace(".", "").replace(",", "."))}
                 self.transactions.append(transaction)
         return self.transactions
+    
+    def apply_signs(self):
+        for i in range(1, len(self.transactions)):
+            prev_balance = self.transactions[i-1]["balance"]
+            current_balance = self.transactions[i]["balance"]
+            amount = self.transactions[i]["amount"]
+
+            if current_balance < prev_balance:
+                self.transactions[i]["amount"] = -amount
+            else:
+                self.transactions[i]["amount"] = amount 
