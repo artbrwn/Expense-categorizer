@@ -33,17 +33,33 @@ class NormalizeData:
                 transaction = {"date": datetime.strptime(match.group("date"), "%d-%m-%y"),
                                "description": match.group("description"),
                                "amount": float(match.group("amount").replace(",", ".")),
-                               "balance": float(match.group("balance").replace(".", "").replace(",", "."))}
+                               "balance": float(match.group("balance").replace(".", "").replace(",", ".")),
+                               "type": "bank"}
+                self.transactions.append(transaction)
+            elif raw_transaction["category"] == "card":
+                match = re.match(r'(?P<date>\d{2}/\d{2}/\d{4})\s+\d{4}\s+(?P<description>.+?)\s+(?P<amount>\d{1,3}(?:\.\d{3})*,\d{2})', raw_transaction["transaction"])
+                transaction = {"date": datetime.strptime(match.group("date"), "%d/%m/%Y"),
+                               "description": match.group("description"),
+                               "amount": -float(match.group("amount").replace(",", ".")),
+                               "type": "card"}
                 self.transactions.append(transaction)
         return self.transactions
     
     def apply_signs(self):
-        for i in range(1, len(self.transactions)):
-            prev_balance = self.transactions[i-1]["balance"]
-            current_balance = self.transactions[i]["balance"]
-            amount = self.transactions[i]["amount"]
+        bank_transactions = [t for t in self.transactions if t["type"] == "bank"]
+        for i in range(1, len(bank_transactions)):
+            prev_balance = bank_transactions[i-1]["balance"]
+            current_balance = bank_transactions[i]["balance"]
+            amount = bank_transactions[i]["amount"]
 
             if current_balance < prev_balance:
-                self.transactions[i]["amount"] = -amount
+                bank_transactions[i]["amount"] = -amount
             else:
-                self.transactions[i]["amount"] = amount 
+                bank_transactions[i]["amount"] = amount
+        pointer = 0
+        for i in range(len(self.transactions)): 
+            if self.transactions[i]["type"] == "bank":
+                self.transactions[i] = bank_transactions[pointer]
+                pointer += 1
+
+        
