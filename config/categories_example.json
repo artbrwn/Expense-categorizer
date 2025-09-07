@@ -1,0 +1,10 @@
+{
+    "housing": ["alquiler"],
+    "food & groceries": ["lidl"],
+    "leisure": ["cinesa"],
+    "eating outside": ["restaurant"],
+    "personal expenses": ["hairdresser", "peluquería"],
+    "annual expenses": ["ryanair", "vueling"],
+    "uncategorized": []
+}
+
