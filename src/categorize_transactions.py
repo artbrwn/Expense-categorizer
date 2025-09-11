@@ -33,10 +33,8 @@ class CategorizeTransactions:
 
         self.categorized_transactions = transactions_list
 
-
-
-    def manual_correction(self):
-        pass
-
-    def export_result(self):
-        pass
+    def get_uncategorized(self):
+        return [transaction for transaction in self.categorized_transactions if transaction["category"] == "uncategorized"]
+    
+    def manual_assign_category(self, transaction, category):
+        transaction["category"] = category
