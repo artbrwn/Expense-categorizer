@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 categories.json
+sandbox-controller.py

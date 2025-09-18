@@ -4,6 +4,9 @@
 
 {% block content %}
     <h2>Please select your files</h2>
-    <label for="files">Files:</label>
-    <input type="file" id="files" accept="application/pdf">
+    <form action="" method="post">
+        <label for="files">Files:</label>
+        <input type="file" id="files" accept="application/pdf"><br>
+        <button type="submit">Send</button>
+    </form>
 {% endblock %}

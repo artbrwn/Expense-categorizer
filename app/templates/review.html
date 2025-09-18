@@ -9,15 +9,22 @@
             <th>Description</th>
             <th>Ammmount</th>
             <th>Category</th>
-            <th>Actions</th>
         </tr>
-        {% for expense in expenses %}
+        <form action="">
+        {% for transaction in transactions %}
             <tr>
-                <td>{{expense["ammount"]}}</td>
-                <td>{{expense["description"]}}</td>
-                <td>{{expense["category"]}}</td>
-                <td>EDIT</td>
+                <td>{{transaction["date"]}}</td>
+                <td><input type="text" value="{{transaction["description"]}}" name=""></td>
+                <td><input type="number" value="{{transaction["number"]}}" step="0.01" name=""></td>
+                <td>
+                    <select name="">
+                        {% for category in categories %}
+                        <option value="{{category}}" {% if transaction["category"] == category %}selected{% endif %}>{{category}}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </tr>
         {% endfor %}
+        </form>
     </table>
 {% endblock %}

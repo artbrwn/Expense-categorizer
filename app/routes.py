@@ -4,3 +4,7 @@ from flask import render_template
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/review")
+def review():
+    return render_template("review.html", transactions={}, categories={})
