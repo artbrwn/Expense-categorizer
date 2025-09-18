@@ -1,5 +1,5 @@
 import pytest
-from src.load_data import LoadData
+from app.models.load_data import LoadData
 
 def test_non_existing_folder_fails():
     with pytest.raises(FileNotFoundError) as file_exception:

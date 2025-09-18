@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} Review - Expense Categorizer{% endblock %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Ammmount</th>
+            <th>Category</th>
+            <th>Actions</th>
+        </tr>
+        {% for expense in expenses %}
+            <tr>
+                <td>{{expense["ammount"]}}</td>
+                <td>{{expense["description"]}}</td>
+                <td>{{expense["category"]}}</td>
+                <td>EDIT</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
