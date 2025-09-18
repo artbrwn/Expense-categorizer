@@ -17,6 +17,7 @@ class CategorizeTransactions:
             self.categories = {cat: set(keywords) for cat, keywords in categories.items()}
 
     def categorize(self, transactions_list: list):
+        id = 0
         for transaction in transactions_list:
             found = False
             for category, keywords in self.categories.items():
@@ -30,6 +31,8 @@ class CategorizeTransactions:
 
             if not found:
                 transaction["category"] = "uncategorized"
+            transaction["id"] = id
+            id +=1
 
         self.categorized_transactions = transactions_list
 
