@@ -3,19 +3,19 @@
 {% block title %} Review - Expense Categorizer{% endblock %}
 
 {% block content %}
-    <table>
+    <table border="1">
         <tr>
             <th>Date</th>
             <th>Description</th>
-            <th>Ammmount</th>
+            <th>Amount</th>
             <th>Category</th>
         </tr>
-        <form action="">
+        <form action="" method="POST" id="review-form">
         {% for transaction in transactions %}
             <tr>
                 <td>{{transaction["date"]}}</td>
                 <td><input type="text" value="{{transaction["description"]}}" name=""></td>
-                <td><input type="number" value="{{transaction["number"]}}" step="0.01" name=""></td>
+                <td><input type="number" value="{{transaction["amount"]}}" step="0.01" name=""></td>
                 <td>
                     <select name="">
                         {% for category in categories %}
@@ -27,4 +27,5 @@
         {% endfor %}
         </form>
     </table>
+    <button type="submit" form="review-form">Analyze</button>
 {% endblock %}
