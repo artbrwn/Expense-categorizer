@@ -6,3 +6,4 @@ __pycache__/
 .DS_Store
 categories.json
 sandbox-controller.py
+processed_data.json

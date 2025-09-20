@@ -1,16 +1,20 @@
 from app.models.normalize_data import NormalizeData
 from app.models.load_data import LoadData
 from app.models.categorize_transactions import CategorizeTransactions
+from collections import defaultdict
+from datetime import datetime
 
 class TransactionProcessor:
-    """
-    Recieves a folder path and returns classified transactions.
-    """
-    def __init__(self, folder_path):
-        self.folder_path = folder_path
+
+    def __init__(self):
+        self.folder_path = ""
         self.categories = []
     
-    def process_transactions(self):
+    def process_transactions(self, folder_path: str) -> list:
+        """
+        Recieves a folder path and returns classified transactions.
+        """
+        self.folder_path = folder_path
         # Create instance of LoadData for statements folder
         load_data = LoadData(self.folder_path)
 
@@ -40,5 +44,27 @@ class TransactionProcessor:
 
         self.categories = list(categorize_transactions.categories.keys())
         return categorize_transactions.categorized_transactions
-
     
+    def reconstruct_transactions(self, data_form: dict) -> list:
+        """
+        Recieves data form and returns list of dictionaries for each transaction
+        """
+        def cast_field(field, value):
+            if field == "id":
+                return int(value)
+            elif field == "amount":
+                return float(value)
+            elif field == "date":
+                return datetime.fromisoformat(value).date().isoformat()
+            else:
+                return value
+
+        transactions = dict()
+        for key, value in data_form.items():
+            field, tx_id = key.split("-")
+            tx_id = int(tx_id)
+            if tx_id not in transactions:
+                transactions[tx_id] = {}
+            transactions[tx_id][field] = cast_field(field, value)
+
+        return [transactions[i] for i in sorted(transactions.keys())]
