@@ -24,3 +24,6 @@ def review():
         
         return redirect("/stats.html")
     
+@app.route("/stats")
+def stats():
+    return render_template("stats.html")
