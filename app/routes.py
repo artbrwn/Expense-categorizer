@@ -2,6 +2,7 @@ from app import app
 from flask import render_template, request, redirect
 from app.models.transaction_processor import TransactionProcessor
 import json
+from app.models.analyze_transactions import AnalyzeTransactions
 
 @app.route("/")
 def index():
@@ -22,8 +23,12 @@ def review():
         with open("data/processed_data.json", "w") as file:
             json.dump(transactions, file)
         
-        return redirect("/stats.html")
+        return redirect("/stats")
     
 @app.route("/stats")
 def stats():
-    return render_template("stats.html")
+    df = AnalyzeTransactions()
+    df.load_data()
+    df.create_month_column()
+    charts = df.prepare_for_chart()
+    return render_template("stats.html", charts=charts)

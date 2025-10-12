@@ -4,7 +4,7 @@
 
 {% block content %}
     <form action="/review" method="POST" id="review-form">
-        <table border="1">
+        <table data-theme="light">
             <tr>
                 <th>Date</th>
                 <th>Description</th>
@@ -18,7 +18,7 @@
                         <input type="hidden" name="date-{{transaction["id"]}}" value="{{transaction["date"]}}">
                     </td>
                     <td>
-                        <input type="text" value="{{transaction["description"]}}" disabled>
+                        <textarea name="" id="" disabled>{{transaction["description"]}}</textarea>
                         <input type="hidden" name="description-{{transaction["id"]}}" value="{{transaction["description"]}}">
                     </td>
                     <td>
