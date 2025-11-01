@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Process - Expense Categorizer{% endblock %}
+{% block content %}
+{% if message %}
+
+<div class="alert">
+    {{ message }}
+</div>
+
+{% else %}
+
+<div class="card">
+    <div class="card-body">
+        All transactions have been succesfully processed.
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
