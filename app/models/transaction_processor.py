@@ -1,20 +1,20 @@
 from app.models.normalize_data import NormalizeData
 from app.models.load_data import LoadData
 from app.models.categorize_transactions import CategorizeTransactions
-from collections import defaultdict
 from datetime import datetime
 
 class TransactionProcessor:
 
-    def __init__(self):
+    def __init__(self, folder_path="statements"):
         self.folder_path = ""
         self.categories = []
+        self.folder_path = folder_path
     
-    def process_transactions(self, folder_path: str) -> list:
+    def process_transactions(self) -> list:
         """
         Recieves a folder path and returns classified transactions.
         """
-        self.folder_path = folder_path
+        
         # Create instance of LoadData for statements folder
         load_data = LoadData(self.folder_path)
 
