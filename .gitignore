@@ -7,3 +7,4 @@ __pycache__/
 categories.json
 sandbox-controller.py
 processed_data.json
+data/
