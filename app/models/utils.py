@@ -1,14 +1,15 @@
 import os
 import re
 from datetime import datetime
+import json
 
 def get_available_files():
     files = []
-    for file in os.listdir('data/processed/'):
+    for file in os.listdir('data/auto_processed/'):
         files.append({
-            'path': f'processed/{file}',
+            'path': f'auto_processed/{file}',
             'name': file,
-            'type': 'auto-clasificado',
+            'type': 'auto-classified',
             'date': extract_date(file),
             'editable': True
         })
@@ -18,7 +19,7 @@ def get_available_files():
         files.append({
             'path': f'committed/{file}',
             'name': file,
-            'type': 'ya revisado',
+            'type': 'already reviewed',
             'date': extract_date(file),
             'editable': True
         })
@@ -42,3 +43,7 @@ def extract_date(filename):
             return None
     
     return None
+
+def save_transactions(updated, file_path):
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(updated, f)

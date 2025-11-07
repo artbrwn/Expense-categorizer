@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Stats select - Expense Categorizer{% endblock %}
+
+{% block content %}
+
+<h2>Choose the file to see stats</h2>
+
+    <table>
+        <tr>
+            <th>File</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for file in available_files %}
+        <tr>
+            <td>{{ file.name }}</td>
+            <td>
+                {% if file.type == 'auto-classified' %}
+                    🤖 Autoclassified
+                {% else %}
+                    ✅ Already reviewed
+                {% endif %}
+            </td>
+            <td>{{ file.date }}</td>
+            <td><a href="/stats?file={{ file.path }}&page=1">See stats</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}

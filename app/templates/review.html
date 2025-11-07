@@ -4,14 +4,49 @@
 
 {% block content %}
 <style>
-    .uncategorized{
+    .uncategorized {
         color: red;
+    }
+    .transaction-row {
+        /* Todas las filas inicialmente visibles, JS las ocultará */
+    }
+    .pagination-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px 0;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+    }
+    .pagination-controls button {
+        padding: 8px 16px;
+        cursor: pointer;
+    }
+    .pagination-controls button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 </style>
 
+<div class="session-info">
+    <p>📁 Editando: <strong>{{ file_path }}</strong></p>
+    <p>Total de transacciones: <strong id="total-transactions">{{ transactions|length }}</strong></p>
+</div>
+
 <h2>Revisión de transacciones</h2>
 
-<form action="/review" method="POST" id="review-form">
+<!-- Controles de paginación superiores -->
+<div class="pagination-controls">
+    <button id="prev-btn" onclick="previousPage()">← Anterior</button>
+    <span>
+        Página <span id="current-page">1</span> de <span id="total-pages">1</span>
+        (Mostrando <span id="showing-count">0</span> transacciones)
+    </span>
+    <button id="next-btn" onclick="nextPage()">Siguiente →</button>
+</div>
+
+<form action="/review?file={{ file_path }}" method="POST" id="review-form">
   <table data-theme="light">
     <thead>
       <tr>
@@ -21,9 +56,9 @@
         <th>Categoría</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody id="transactions-tbody">
       {% for transaction in transactions %}
-      <tr class="
+      <tr class="transaction-row
         {% if transaction['category'] == 'uncategorized' %}
           uncategorized
         {% elif transaction['amount']|float < 0 %}
@@ -31,10 +66,11 @@
         {% else %}
           ingreso
         {% endif %}
-      ">
+      " data-index="{{ loop.index0 }}">
         <td>
           {{transaction['date']}}
           <input type="hidden" name="date-{{transaction['id']}}" value="{{transaction['date']}}">
+          <input type="hidden" name="id-{{transaction['id']}}" value="{{transaction['id']}}">
         </td>
         <td>
           <input type="text" value="{{transaction['description']}}" disabled>
@@ -55,6 +91,131 @@
     </tbody>
   </table>
 
-  <button type="submit">Guardar cambios</button>
+  <div style="margin-top: 20px;">
+    <button type="submit">💾 Guardar todas las transacciones</button>
+  </div>
 </form>
+
+<!-- Controles de paginación inferiores -->
+<div class="pagination-controls">
+    <button id="prev-btn-bottom" onclick="previousPage()">← Anterior</button>
+    <span>
+        Página <span id="current-page-bottom">1</span> de <span id="total-pages-bottom">1</span>
+    </span>
+    <button id="next-btn-bottom" onclick="nextPage()">Siguiente →</button>
+</div>
+
+<script>
+    // Configuración
+    const ITEMS_PER_PAGE = 50;
+    let currentPage = 1;
+    
+    // Obtener todas las filas
+    const allRows = document.querySelectorAll('.transaction-row');
+    const totalItems = allRows.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    
+    // Inicializar
+    function init() {
+        updatePageInfo();
+        showPage(currentPage);
+    }
+    
+    // Mostrar página específica
+    function showPage(pageNumber) {
+        const start = (pageNumber - 1) * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+        
+        allRows.forEach((row, index) => {
+            if (index >= start && index < end) {
+                row.style.display = '';  // Mostrar
+            } else {
+                row.style.display = 'none';  // Ocultar
+            }
+        });
+        
+        updatePageInfo();
+        updateButtons();
+        scrollToTop();
+    }
+    
+    // Actualizar información de página
+    function updatePageInfo() {
+        const start = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+        const end = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+        const showing = end - start + 1;
+        
+        // Actualizar todos los elementos de información
+        document.getElementById('current-page').textContent = currentPage;
+        document.getElementById('current-page-bottom').textContent = currentPage;
+        document.getElementById('total-pages').textContent = totalPages;
+        document.getElementById('total-pages-bottom').textContent = totalPages;
+        document.getElementById('showing-count').textContent = showing;
+    }
+    
+    // Actualizar estado de botones
+    function updateButtons() {
+        const prevBtns = [
+            document.getElementById('prev-btn'),
+            document.getElementById('prev-btn-bottom')
+        ];
+        const nextBtns = [
+            document.getElementById('next-btn'),
+            document.getElementById('next-btn-bottom')
+        ];
+        
+        // Botones anteriores
+        prevBtns.forEach(btn => {
+            btn.disabled = currentPage === 1;
+        });
+        
+        // Botones siguientes
+        nextBtns.forEach(btn => {
+            btn.disabled = currentPage === totalPages;
+        });
+    }
+    
+    // Navegar a página anterior
+    function previousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage);
+        }
+    }
+    
+    // Navegar a página siguiente
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showPage(currentPage);
+        }
+    }
+    
+    // Scroll al inicio de la tabla
+    function scrollToTop() {
+        document.querySelector('h2').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Opcional: Navegar con teclado
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousPage();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                nextPage();
+            }
+        }
+    });
+    
+    // Inicializar al cargar la página
+    init();
+</script>
+
+<!-- Volver al selector -->
+<a href="/review/select" style="margin-top: 20px; display: inline-block;">
+    ← Volver a la lista de archivos
+</a>
+
 {% endblock %}

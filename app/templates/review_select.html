@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Review - Expense Categorizer{% endblock %}
+
+{% block content %}
+
+<h2>Choose the file to edit</h2>
+
+    <table>
+        <tr>
+            <th>File</th>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+        {% for file in available_files %}
+        <tr>
+            <td>{{ file.name }}</td>
+            <td>
+                {% if file.type == 'auto-classified' %}
+                    🤖 Autoclassified
+                {% else %}
+                    ✅ Already reviewed
+                {% endif %}
+            </td>
+            <td>{{ file.date }}</td>
+            <td><a href="/review?file={{ file.path }}&page=1">Edit</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}

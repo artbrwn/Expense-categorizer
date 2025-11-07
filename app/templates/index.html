@@ -3,6 +3,9 @@
 {% block title %}Welcome page - Expense Categorizer{% endblock %}
 
 {% block content %}
-    <button><a href="/stats">See analyzed</a></button>
-    <button><a href="/review">Analyze (irreversible) </a></button>
+<div role="group">
+    <a href="/process" class="button primary">Automatically process</a>
+    <a href="/stats/select" class="button primary">See analyzed</a>
+    <a href="/review/select" class="button contrast">Choose file</a>
+</div>
 {% endblock %}

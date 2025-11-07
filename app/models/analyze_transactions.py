@@ -6,7 +6,7 @@ import base64
 from io import BytesIO
 
 class AnalyzeTransactions:
-    def load_data(self, file_path="data/processed_data.json"):
+    def load_data(self, file_path):
         self.all_data = pd.read_json(file_path, convert_dates=True)
     
     def create_month_column(self):
