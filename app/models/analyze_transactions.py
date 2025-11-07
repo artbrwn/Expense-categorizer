@@ -38,7 +38,7 @@ class AnalyzeTransactions:
     def prepare_for_chart(self):
         # --- Gasto por categoría excluyendo salary y uncategorized ---
         df_filtered = self.all_data[
-            ~self.all_data["category"].isin(["salary", "uncategorized"])
+            ~self.all_data["category"].isin(["salary", "uncategorized", "transactions"])
         ].copy()
         df_filtered["amount"] = df_filtered["amount"].abs()
         
@@ -59,7 +59,14 @@ class AnalyzeTransactions:
         category_chart = base64.b64encode(buffer1.getvalue()).decode()
         
         # --- Gasto vs ahorro ---
-        df_expenses = self.all_data[~self.all_data["category"].isin(["salary", "uncategorized"])]
+        df_expenses = self.all_data[
+            ~self.all_data["category"].isin(["uncategorized", "salary", "transactions"])
+        ]
+        total_expense = (
+            df_expenses["amount"].abs()
+            .groupby(df_expenses["year_month"])
+            .sum()
+        )
         total_expense = df_expenses.groupby("year_month")["amount"].sum().abs()
         
         df_compare = pd.DataFrame({
